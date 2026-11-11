@@ -12,6 +12,7 @@ skills — follow that package’s `AGENTS.md`.
 | --- | --- |
 | [`silentorb-agents-publishing`](./packages/silentorb-agents-publishing/) | How agent changes are saved and published |
 | [`silentorb-agents-planning`](./packages/silentorb-agents-planning/) | How agents author plans for human review (dual audience, objective analysis) |
+| [`silentorb-agents-workbench`](./packages/silentorb-agents-workbench/) | Multi-repo workbench patterns (Compose mounts, push scripts, agent-doc routing) |
 
 ## Install (consumer)
 
@@ -22,6 +23,7 @@ mkdir -p vendor
 cd vendor
 oras pull ghcr.io/silentorb/silentorb-agents-publishing:0.1.0
 oras pull ghcr.io/silentorb/silentorb-agents-planning:0.1.0
+oras pull ghcr.io/silentorb/silentorb-agents-workbench:0.1.0
 ```
 
 Expose each package’s skill directories on the consumer’s agent skill path (for

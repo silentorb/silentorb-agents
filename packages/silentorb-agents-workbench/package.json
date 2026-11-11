@@ -1,0 +1,10 @@
+{
+  "name": "silentorb-agents-workbench",
+  "version": "0.1.0",
+  "description": "Agent skills for Silent Orb multi-repo workbench patterns (Compose mounts, push scripts, agent-doc routing)",
+  "license": "MIT",
+  "files": [
+    "AGENTS.md",
+    "workbench-env"
+  ]
+}
