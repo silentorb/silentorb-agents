@@ -1,0 +1,50 @@
+# silentorb-agents
+
+Installable agent skill packages for Silent Orb projects.
+
+Packages use `package.json` (name + semver) as lightweight metadata and publish
+as **OCI artifacts** to GHCR. Installing a package into a project enables its
+skills — follow that package’s `AGENTS.md`.
+
+## Packages
+
+| Package | Concern |
+| --- | --- |
+| [`silentorb-agents-publishing`](./packages/silentorb-agents-publishing/) | How agent changes are saved and published |
+
+## Install (consumer)
+
+Pull a versioned package into a project-local path of your choosing:
+
+```bash
+mkdir -p vendor
+cd vendor
+oras pull ghcr.io/silentorb/silentorb-agents-publishing:0.1.0
+```
+
+Or, while developing this library from a sibling mount, link the package directory
+into the consumer (path/`file:`-style). Presence of the installed package is
+enablement; see the package `AGENTS.md`.
+
+## Publish (maintainers)
+
+On a `v*` git tag, CI pushes each `packages/*` artifact to
+`ghcr.io/silentorb/<package-name>:<version>` using ORAS.
+
+Local dry-run (no registry push; needs `jq`):
+
+```bash
+DRY_RUN=1 bash pack/pack.sh
+```
+
+Local push (needs `oras`, `jq`, and GHCR auth):
+
+```bash
+echo "$GITHUB_TOKEN" | oras login ghcr.io -u USERNAME --password-stdin
+DRY_RUN=0 bash pack/pack.sh
+```
+
+Optional packer image (`pack/Dockerfile`) bundles `oras` + `jq` for environments where those are not installed; run it with the repo mounted at `/work` when Docker volume mounts resolve to the host path.
+## License
+
+MIT — see [LICENSE](./LICENSE).

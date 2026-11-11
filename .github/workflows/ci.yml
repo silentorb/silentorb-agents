@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pack-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate package.json files
+        run: |
+          set -euo pipefail
+          for pkg in packages/*/package.json; do
+            name=$(jq -r '.name // empty' "$pkg")
+            version=$(jq -r '.version // empty' "$pkg")
+            test -n "$name" && test -n "$version"
+            dir=$(dirname "$pkg")
+            test -f "$dir/AGENTS.md"
+            echo "ok $name@$version"
+          done
+
+      - name: Dry-run pack
+        run: DRY_RUN=1 bash pack/pack.sh

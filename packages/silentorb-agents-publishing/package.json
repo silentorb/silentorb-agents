@@ -1,0 +1,10 @@
+{
+  "name": "silentorb-agents-publishing",
+  "version": "0.1.0",
+  "description": "Agent skills for how changes are saved and published (plan commit strategy, verify gate, deferred commit)",
+  "license": "MIT",
+  "files": [
+    "AGENTS.md",
+    "plan-commit"
+  ]
+}
