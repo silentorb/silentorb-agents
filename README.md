@@ -16,23 +16,15 @@ skills — follow that package’s `AGENTS.md`.
 
 ## Install (consumer)
 
-Pull a versioned package into a project-local path of your choosing:
-
-```bash
-mkdir -p vendor
-cd vendor
-oras pull ghcr.io/silentorb/silentorb-agents-publishing:0.1.0
-oras pull ghcr.io/silentorb/silentorb-agents-planning:0.1.0
-oras pull ghcr.io/silentorb/silentorb-agents-workbench:0.1.0
-```
-
-Expose each package’s skill directories on the consumer’s agent skill path (for
-Cursor: symlink into `.agents/skills`). Follow each package’s `AGENTS.md`.
+Suggested Dev Container recipe (ORAS bake under `/opt/silentorb-agents/`,
+committed `.agents/skills` symlinks, and root `AGENTS.md` file links):
+[docs/container-installation.md](./docs/container-installation.md). That guide
+is a shared pattern for one common use case, not a definitive install contract.
 
 **Silent Orb workbench:** consumes via the `.mnt/silentorb-agents` bind mount —
 symlink `.agents/skills/<skill>` straight at
-`packages/<package>/<skill>` (no vendor/oras install required for local
-library development).
+`packages/<package>/<skill>` (no ORAS install required for local library
+development).
 
 ## Publish (maintainers)
 
