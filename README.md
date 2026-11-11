@@ -11,6 +11,7 @@ skills — follow that package’s `AGENTS.md`.
 | Package | Concern |
 | --- | --- |
 | [`silentorb-agents-publishing`](./packages/silentorb-agents-publishing/) | How agent changes are saved and published |
+| [`silentorb-agents-planning`](./packages/silentorb-agents-planning/) | How agents author plans for human review (dual audience, objective analysis) |
 
 ## Install (consumer)
 
@@ -20,11 +21,16 @@ Pull a versioned package into a project-local path of your choosing:
 mkdir -p vendor
 cd vendor
 oras pull ghcr.io/silentorb/silentorb-agents-publishing:0.1.0
+oras pull ghcr.io/silentorb/silentorb-agents-planning:0.1.0
 ```
 
-Or, while developing this library from a sibling mount, link the package directory
-into the consumer (path/`file:`-style). Presence of the installed package is
-enablement; see the package `AGENTS.md`.
+Expose each package’s skill directories on the consumer’s agent skill path (for
+Cursor: symlink into `.agents/skills`). Follow each package’s `AGENTS.md`.
+
+**Silent Orb workbench:** consumes via the `.mnt/silentorb-agents` bind mount —
+symlink `.agents/skills/<skill>` straight at
+`packages/<package>/<skill>` (no vendor/oras install required for local
+library development).
 
 ## Publish (maintainers)
 

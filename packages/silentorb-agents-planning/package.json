@@ -1,0 +1,10 @@
+{
+  "name": "silentorb-agents-planning",
+  "version": "0.1.0",
+  "description": "Agent skills for dual-audience plan authoring and objective analysis (Pros / Cons / Worth doing)",
+  "license": "MIT",
+  "files": [
+    "AGENTS.md",
+    "plan-design"
+  ]
+}
