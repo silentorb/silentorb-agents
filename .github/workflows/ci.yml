@@ -25,3 +25,11 @@ jobs:
 
       - name: Dry-run pack
         run: DRY_RUN=1 bash pack/pack.sh
+
+  pack-docker-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker pack smoke
+        run: bash pack/docker-pack.sh

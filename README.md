@@ -37,6 +37,17 @@ Local dry-run (no registry push; needs `jq`):
 DRY_RUN=1 bash pack/pack.sh
 ```
 
+Pre-CI packer **container** smoke (builds `pack/Dockerfile`, runs one ephemeral
+container, removes it). Default `DRY_RUN=1`. Needs Docker and a **host-visible**
+repo path for the bind mount (GitHub Actions and a normal host checkout are fine).
+From a docker-outside-of-docker workbench shell, set `HOST_REPO_PATH` (or
+`SILENTORB_AGENTS_REPO`) to the host path of this repo, or use bare `pack.sh`
+above instead:
+
+```bash
+bash pack/docker-pack.sh
+```
+
 Local push (needs `oras`, `jq`, and GHCR auth):
 
 ```bash
@@ -44,7 +55,6 @@ echo "$GITHUB_TOKEN" | oras login ghcr.io -u USERNAME --password-stdin
 DRY_RUN=0 bash pack/pack.sh
 ```
 
-Optional packer image (`pack/Dockerfile`) bundles `oras` + `jq` for environments where those are not installed; run it with the repo mounted at `/work` when Docker volume mounts resolve to the host path.
 ## License
 
 MIT — see [LICENSE](./LICENSE).
