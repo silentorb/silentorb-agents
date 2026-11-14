@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Iterate immediate subdirectories and push when ahead of origin.
+set -euo pipefail
+
+root="${1:-.}"
+
+# Colors for static status lines only (git command output stays default).
+c_push=$'\033[1;37m'   # bright white
+c_norepo=$'\033[90m'    # dark gray
+c_dirty=$'\033[95m'     # light magenta
+c_diverged=$'\033[31m'  # red
+c_reset=$'\033[0m'
+
+if [[ ! -d "$root" ]]; then
+  echo "error: not a directory: $root" >&2
+  exit 1
+fi
+
+shopt -s nullglob
+for dir in "$root"/*/; do
+  name="${dir%/}"
+  name="${name##*/}"
+
+  if [[ ! -d "$dir/.git" ]] && ! git -C "$dir" rev-parse --git-dir >/dev/null 2>&1; then
+    echo "${c_norepo}$name: not a git repo${c_reset}"
+    continue
+  fi
+
+  if [[ -n "$(git -C "$dir" status --porcelain 2>/dev/null)" ]]; then
+    echo "${c_dirty}$name: dirty working tree${c_reset}"
+    continue
+  fi
+
+  if ! git -C "$dir" rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1; then
+    echo "$name: no upstream branch"
+    continue
+  fi
+
+  # Fetch so ahead/behind counts reflect origin
+  if ! git -C "$dir" fetch --quiet 2>/dev/null; then
+    echo "$name: fetch failed"
+    continue
+  fi
+
+  read -r behind ahead < <(git -C "$dir" rev-list --left-right --count '@{u}...HEAD' 2>/dev/null)
+
+  if (( behind > 0 && ahead > 0 )); then
+    echo "${c_diverged}$name: diverged from origin (ahead $ahead, behind $behind)${c_reset}"
+  elif (( behind > 0 )); then
+    echo "$name: behind origin ($behind commit(s))"
+  elif (( ahead > 0 )); then
+    echo "${c_push}$name: ahead of origin ($ahead commit(s)) — pushing${c_reset}"
+    git -C "$dir" push
+  else
+    echo "$name: in sync with origin"
+  fi
+done
