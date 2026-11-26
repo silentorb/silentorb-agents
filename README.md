@@ -21,10 +21,10 @@ committed `.agents/skills` symlinks, and root `AGENTS.md` file links):
 [docs/container-installation.md](./docs/container-installation.md). That guide
 is a shared pattern for one common use case, not a definitive install contract.
 
-**Silent Orb workbench:** consumes via the `.mnt/silentorb-agents` bind mount —
-symlink `.agents/skills/<skill>` straight at
-`packages/<package>/<skill>` (no ORAS install required for local library
-development).
+**Silent Orb workbenches** (silentorb, aura, imp): consume the sibling checkout
+directly — committed relative symlinks `.claude/skills/<skill>` (and
+`.agents/skills/<skill>`) → `../../../silentorb-agents/packages/<package>/<skill>`
+(no ORAS install; containers mount this repo at `/workspaces/silentorb-agents`).
 
 ## Publish (maintainers)
 

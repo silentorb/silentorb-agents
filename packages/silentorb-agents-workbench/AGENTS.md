@@ -8,33 +8,35 @@ its skills** and the standing defaults below.
 These apply without the user asking, unless the project already uses a different
 deliberate layout or the user opts out.
 
-### Dev Container + Docker Compose
+### Host-first, sibling layout
 
-Assume a multi-repo workbench uses a **Dev Container with Docker Compose**:
-
-- Compose file under `.devcontainer/` (typically `docker-compose.yml`)
-- `devcontainer.json` sets `dockerComposeFile` and an attach `service`
-- Host sibling repos bind-mount under **`.mnt/`** (not cloned at container start)
-- Compose project `name` matches what Dev Containers would use so host CLI and
-  the IDE share one stack
-
-Prefer that shape when **creating or evolving** a workbench. It is the default
-assumption, not a hard requirement for every consumer repo.
+- Agents (Claude Code, Cursor) run on the **host (WSL)** from the workbench
+  directory. Related repos are **sibling checkouts** (`../<repo>`) and are never
+  mounted into the workbench tree.
+- Toolchains run in **Docker Compose** services (`.devcontainer/docker-compose.yml`).
+  Inside containers every repo, the workbench included, is mounted at
+  `/workspaces/<repo>`, so sibling-relative paths resolve the same everywhere.
+- Compose is the **single source of truth**. The Dev Container
+  (`devcontainer.json`) is an optional thin attach layer with no mounts, env,
+  devices, or start hooks of its own. Agent-only attach services use
+  `profiles: ["ide"]`.
+- The Compose project `name` matches what Dev Containers would use
+  (`<workbench>_devcontainer`), so host scripts and the IDE share one stack.
 
 ### Agent-doc routing
 
-- Product / domain agent docs live in the **mounted repo that owns them**
-  (prefer that repo’s `AGENTS.md` / `docs/`).
-- Workbench-root docs cover **orchestration only** (mounts, Compose, scripts,
-  verify matrix pointers).
-- Do not write product guidance only at the workbench root when a mount owns
-  the domain.
+- Product / domain agent docs live in the **sibling repo that owns them**
+  (prefer that repo's `AGENTS.md` / `docs/`).
+- Workbench-root docs cover **orchestration only** (repo table, services,
+  scripts, verify matrix pointers). Large on-demand indexes go in `docs/`,
+  not the always-loaded `AGENTS.md`.
+- `CLAUDE.md` contains only `@AGENTS.md`.
 
-Concrete mount tables and verify commands stay in the **consuming** workbench
+Concrete repo tables and verify commands stay in the **consuming** workbench
 `AGENTS.md`.
 
 ## Skills
 
 | Trigger | Skill |
 | --- | --- |
-| Creating or maintaining a multi-repo workbench env (push script, `.mnt/` mounts, Compose, agent-doc routing) | [workbench-env](./workbench-env/SKILL.md) |
+| Creating or maintaining a multi-repo workbench env (Compose services, `scripts/run` / `scripts/compose` / `scripts/push`, sibling repo list, agent-doc routing) | [workbench-env](./workbench-env/SKILL.md) |
